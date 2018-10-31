@@ -1,0 +1,9 @@
+#For install all libraries required by this project,
+#do this:
+
+#python -m pip install -r libraries
+
+#Librería para trabajar mensajes con color.
+termcolor
+#Librería de computación matricial y vectorial.
+numpy
