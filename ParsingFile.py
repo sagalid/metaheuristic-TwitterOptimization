@@ -14,9 +14,11 @@ def parsear(nombre):
     try:
         inicio_lectura = iniciaMatrizYVectorCosto(nombre)
         poblarCoberturas(inicio_lectura, nombre)
-        print('End file parsing: ' + str(nombre))
+        #print('\n\nEnd file parsing: ' + colored(str(nombre), 'green') + "\n")
+        return True
     except Exception as ex:
         print("\n\t" + colored(ex, "red"))
+        return False
 
 def iniciaMatrizYVectorCosto(nombre_archivo):
     linea_fin_vcosto = 1
@@ -30,11 +32,11 @@ def iniciaMatrizYVectorCosto(nombre_archivo):
     lineas = archivo.readlines()
     #Iteración por cada una de las líneas del archivo.
     for li in lineas:
+        li = li.strip()
         if numeroLineas is 1:
-            filas, columnas = map(int, li.split())
+            filas, columnas = [int(x) for x in li.split(" ")]
+
         if numeroLineas >= 2 and vectorCosto.__len__() <= (columnas - 1):
-            #vectorCosto = vectorCosto + map(int, li.split())
-            li = li.strip()
             lista = [int(x) for x in li.split(" ")]
             for cost in lista:
                 vectorCosto.append(cost)
@@ -59,12 +61,13 @@ def poblarCoberturas(inicio, nombre_archivo):
 
     cantidad_de_restricciones = 0
     for li in lineas:
-        contadorDePalabras = map(int, li.split())
+        li = li.strip()
+        contadorDePalabras = [int(x) for x in li.split(" ")]
         cantidad_de_palabras = contadorDePalabras.__len__()
         cantidad_en_vector_restriccion = vector_restriccion.__len__()
 
-        if cantidad_de_palabras is 1 and nueva_restriccion:
-            cantidad_de_numeros = map(int, li.split())[0]
+        if cantidad_de_palabras == 1 and nueva_restriccion:
+            cantidad_de_numeros = contadorDePalabras[0]
             nueva_restriccion = False
 
         if cantidad_en_vector_restriccion <= cantidad_de_numeros:
@@ -86,25 +89,21 @@ def poblarCoberturas(inicio, nombre_archivo):
     for row in matriz_restriccion:
         for j in row:
             if i < getCantidadFilas() and j < getCantidadColumnas():
-                matriz_a[i][j] = 1
+                matriz_a[i][j-1] = 1
 
         i += 1
 
     #for row in matriz_a:
-    #    print row
-
+    #    print(row)
 
 def getCantidadColumnas():
     return columnas
 
-
 def getCantidadFilas():
     return filas
 
-
 def getVectorCosto():
     return vectorCosto
-
 
 def getMatrizA():
     return matriz_a
