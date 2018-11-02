@@ -6,9 +6,11 @@ verbose = False
 population_number_M = 30
 number_of_followers_F = 10
 number_of_evaluation_N = 10000
+twitter_users = [None]
 
 
 def run_mh(inputFile):
+    global twitter_users
     if(verbose):
         print(colored('\n\nBegin of Twitter Optmization\n', 'blue'))
     if(verbose):
@@ -21,7 +23,7 @@ def run_mh(inputFile):
         print(colored(pf.matriz_a, 'yellow'))
     if(verbose):
         print(colored('\nInitial twitter user...', 'yellow'), end='')
-    list_twitter_users = initial_twitter_user()
+    twitter_users = initial_twitter_user()
     if (verbose):
         print(colored('OK', 'blue'))
     if (verbose):
@@ -45,24 +47,51 @@ def run_mh(inputFile):
     if (verbose):
         print(colored('OK', 'blue'))
 
+    for ronda in range(number_of_evaluation_N):
+        for person in twitter_users:
+            followers = obtain_followers(person)
+            twitts = obtain_twitters(followers)
+            re_twitts = obtain_re_twitts(followers)
+
+
+def obtain_re_twitts(followers):
+    pass
+
+
+def obtain_twitters(followers):
+    pass
+
+
+def obtain_followers(person):
+    pass
 
 
 def initial_twitter_user():
-    return [None]*population_number_M
+    """
+    This function return a list, with number of user created
+    the users, are represented by a incremental int.
+    :return:
+    list[1,2,3,...,population_number_M]
+    """
+    return [i for i in range(population_number_M)]
+
 
 def initial_following():
     pass
 
+
 def random_twitt():
     pass
+
 
 def random_re_twitt():
     pass
 
+
 def find_hottest_twitt():
     pass
 
-# Un tweet representa un vector solución.
+
 def empty_tweet():
     return [None] * pf.columnas
 
