@@ -7,3 +7,4 @@
 termcolor
 #Librería de computación matricial y vectorial.
 numpy
+scipy
