@@ -36,6 +36,7 @@ def run_mh(inputFile):
             ##if is own tweet hasnt been retweeted for several rounds then
             ####Tweet a new tweet B and replace hottest tweet with B if B is more valuable...
 
+
 def initialize_mh(inputFile):
     global users_of_twitter
     global seed
@@ -60,13 +61,13 @@ def initialize_mh(inputFile):
     users_of_twitter = initial_twitter_user()
     if (verbose):
         print(colored('OK', 'blue'))
-        print(users_of_twitter)
+        #print(users_of_twitter)
     if (verbose):
         print(colored('\nInitial Following...', 'yellow'), end='')
     initial_following(users_of_twitter)
     if (verbose):
         print(colored('OK', 'blue'))
-        print(followers)
+        #print(followers)
     if (verbose):
         print(colored('\nRandom Tweett...', 'yellow'), end='')
     random_twitt()
@@ -95,14 +96,14 @@ def fitness(tweet):
 
 def feasible(tweet):
     a_transposed = np.transpose(pf.getMatrizA())
-    check_feasible = np.dot(tweet, a_transposed)
-    cumple = True
+    set_of_restriction = np.dot(tweet, a_transposed)
+    comply = True
 
-    for restriccion in check_feasible:
-        if restriccion == 0:
-            cumple = False
+    for restriction in set_of_restriction:
+        if restriction == 0:
+            comply = False
 
-    if cumple:
+    if comply:
         return True
     else:
         return False
@@ -137,7 +138,7 @@ def obtain_twitters(followers):
 
 
 def obtain_followers(person):
-    pass
+    return followers[person]
 
 
 def initial_twitter_user():
@@ -169,8 +170,11 @@ def random_twitt():
     global tweets_by_user
     users = [i for i in range(population_number_M)]
     for user in users:
-        tweets_by_user[user] = list(bernoulli.rvs(bernoulli_p, size=pf.getCantidadColumnas()))
-
+        random_tweet = list(bernoulli.rvs(bernoulli_p, size=pf.getCantidadColumnas()))
+        fitness_of_tweet = fitness(random_tweet)
+        is_feasible = feasible(random_tweet)
+        # in tweets by user, append 4 principal elements: tweet, fitness, feasibility and number of re-tweet.
+        tweets_by_user[user] = [random_tweet, fitness_of_tweet, is_feasible, 0]
 
 def random_re_twitt():
     pass
