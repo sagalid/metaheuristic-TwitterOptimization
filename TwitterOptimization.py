@@ -146,7 +146,7 @@ def initial_twitter_user():
     This function return a list, with number of user created
     the users, are represented by a incremental int.
     :return:
-    list[1,2,3,...,population_number_M]
+    list[0,1,2,3,..., population_number-1]
     """
     return [i for i in range(population_number_M)]
 
@@ -191,10 +191,20 @@ def random_twitt():
         # in tweets by user, append 4 principal elements: tweet, fitness, feasibility and number of re-tweet.
         tweets_by_user[user] = [random_tweet, fitness_of_tweet, is_feasible, 0]
 
+
 def random_re_twitt():
-    print("WORK ON =============")
+    print("\nWORK ON =============")
     global tweets_by_user
-    print(tweets_by_user)
+    for user in tweets_by_user.keys():
+        followers_of_user = obtain_followers(user)
+        random_number = random.randint(0, (number_of_followers_F-1))
+        random_follower = followers_of_user[random_number]
+
+        print(tweets_by_user[user][2])
+
+
+
+
     print("END==================")
 
 
