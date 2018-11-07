@@ -152,6 +152,12 @@ def initial_twitter_user():
 
 
 def initial_following(twitter_users):
+    """
+    This function implement a random follower for a twitter user.
+    in stochastic process F user are selected and added to followers of twitter_user
+    :param twitter_users:
+    :return: None
+    """
     global followers
     for user in twitter_users:
         followers_list = []
@@ -167,6 +173,15 @@ def initial_following(twitter_users):
 
 
 def random_twitt():
+    """
+    This function randomly generated tweet for every user in twitter.
+    Populating a global dictionary where every user get:
+        -Tweet
+        -fitness of this tweet
+        -If the tweet is feasible
+        -Numbers of Re-Tweet, obviously in this case te value is 0.
+    :return: None
+    """
     global tweets_by_user
     users = [i for i in range(population_number_M)]
     for user in users:
@@ -177,7 +192,10 @@ def random_twitt():
         tweets_by_user[user] = [random_tweet, fitness_of_tweet, is_feasible, 0]
 
 def random_re_twitt():
-    pass
+    print("WORK ON =============")
+    global tweets_by_user
+    print(tweets_by_user)
+    print("END==================")
 
 
 def find_hottest_twitt():
