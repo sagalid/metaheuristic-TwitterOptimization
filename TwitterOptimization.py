@@ -36,7 +36,6 @@ def run_mh(inputFile):
             ##if is own tweet hasnt been retweeted for several rounds then
             ####Tweet a new tweet B and replace hottest tweet with B if B is more valuable...
 
-
 def initialize_mh(inputFile):
     global users_of_twitter
     global seed
@@ -197,13 +196,12 @@ def random_re_twitt():
     global tweets_by_user
     for user in tweets_by_user.keys():
         followers_of_user = obtain_followers(user)
-        random_number = random.randint(0, (number_of_followers_F-1))
-        random_follower = followers_of_user[random_number]
-
-        print(tweets_by_user[user][2])
-
-
-
+        random_follower = random.choice(followers_of_user)
+        while(1):
+            tweet_details = tweets_by_user[random_follower]
+            if tweet_details[2]:
+                break
+        print(tweet_details)
 
     print("END==================")
 
