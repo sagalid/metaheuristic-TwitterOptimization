@@ -10,11 +10,13 @@ population_number_M = 30
 number_of_followers_F = 10
 number_of_evaluation_N = 10000
 bernoulli_p = 0.5
-users_of_twitter = [None]
-hottest_tweet = [None]
-followers = dict()
-tweets_by_user = dict()
+users_of_twitter = [None] # List of M twitter users.
+#hottest_tweet = [None]
+followers = dict()  # Each user has F followers.
+tweets_by_user = dict()  # Each user has a tweet and every tweet has: user [key], fitness, factibility and Number of RT.
+hottest_tweet_by_user = dict()  # Tweets with more RT. Could exist more than one, given equal number of RT.
 seed = None
+
 
 def run_mh(inputFile):
     global hottest_tweet
@@ -36,15 +38,20 @@ def run_mh(inputFile):
             ##if is own tweet hasnt been retweeted for several rounds then
             ####Tweet a new tweet B and replace hottest tweet with B if B is more valuable...
 
+
 def initialize_mh(inputFile):
     global users_of_twitter
     global seed
+
     if (verbose):
         print(colored('\n\nBegin of Twitter Optmization\n', 'blue'))
     if (verbose):
         print(colored('Parsing file...', 'yellow'), end='')
     if (pf.parsear(inputFile) and verbose):
         print(colored('OK\n', 'blue'))
+    else:
+        print("\n")
+        exit()
     if (verbose):
         print(colored("Rows:\t\t", 'yellow'), colored(pf.filas, 'blue'))
         print(colored("Columns:\t", 'yellow'), colored(pf.columnas, 'blue'), '\n')
@@ -170,6 +177,8 @@ def initial_following(twitter_users):
                 followers_list.append(random_user)
         followers[user] = followers_list
 
+    #print(followers)
+
 
 def random_twitt():
     """
@@ -190,9 +199,10 @@ def random_twitt():
         # in tweets by user, append 4 principal elements: tweet, fitness, feasibility and number of re-tweet.
         tweets_by_user[user] = [random_tweet, fitness_of_tweet, is_feasible, 0]
 
+    #print(tweets_by_user)
+
 
 def random_re_twitt():
-    print("\nWORK ON =============")
     global tweets_by_user
     for user in tweets_by_user.keys():
         followers_of_user = obtain_followers(user)
@@ -201,13 +211,26 @@ def random_re_twitt():
             tweet_details = tweets_by_user[random_follower]
             if tweet_details[2]:
                 break
-        print(tweet_details)
-
-    print("END==================")
+            else:
+                random_follower = random.choice(followers_of_user)
+        tweet_details[3] += 1
+        #print(tweets_by_user[user][3])
 
 
 def find_hottest_twitt():
-    pass
+    max_rt = 0
+    global hottest_tweet_by_user
+    for user in tweets_by_user:
+        number_of_retweets = tweets_by_user[user][3]
+        factible = tweets_by_user[user][2]
+        if number_of_retweets >= max_rt and factible:
+            max_rt = number_of_retweets
+    #This line, will delete previous hottest tweets.
+    hottest_tweet_by_user = dict()
+    for user in tweets_by_user:
+        number_of_retweets = tweets_by_user[user][3]
+        if number_of_retweets == max_rt:
+            hottest_tweet_by_user[user] = [number_of_retweets]
 
 
 def empty_tweet():
@@ -218,11 +241,17 @@ def main(argv):
     global verbose
     inputfile = ''
     try:
+        if len(argv) == 0:
+            help()
+            exit()
         opts, args = getopt.getopt(argv, "h:i:v", ["ifile="])
     except getopt.GetoptError:
         help()
         sys.exit(2)
     for opt, arg in opts:
+        if not opt:
+            help()
+            break
         if opt == '-h':
             help()
             sys.exit()
@@ -239,6 +268,7 @@ def help():
     print("For run Twitter Optimization," + colored(" you must", "red") + " set de benchmark file with:")
     print("")
     print("\t" + colored('TwitterOptimization.py -i <scp41.txt>', 'green'))
+    print("\n\n")
 
 
 main(sys.argv[1:])
