@@ -21,13 +21,13 @@ seed = None
 def run_mh(inputFile):
     global hottest_tweet
     initialize_mh(inputFile)
-    for ronda in range(number_of_evaluation_N):
+    for rund in range(number_of_evaluation_N):
         for person in users_of_twitter:
             followers = obtain_followers(person)
-            tweets = obtain_twitters(followers)
-            re_tweets = obtain_re_twitts(followers)
-            best_tweet = obtain_best(tweets, re_tweets)
-            worst_tweet = obtain_worst(tweets, re_tweets)
+            tweets = obtain_twitters(followers) # Get tweets and retweets
+            # re_tweets = obtain_re_tweets(followers)
+            best_tweet = obtain_best(tweets)
+            worst_tweet = obtain_worst(tweets)
             perform_re_tweet(best_tweet)
             # TODO uncoment
             #if (fitness(best_tweet) < fitness(hottest_tweet)):
@@ -127,20 +127,28 @@ def perform_re_tweet(best_tweet):
     pass
 
 
-def obtain_worst(tweets, re_tweets):
+def obtain_worst(tweets):
     pass
 
 
-def obtain_best(tweets, re_tweets):
-    pass
-
-
-def obtain_re_twitts(followers):
-    pass
-
+def obtain_best(tweets):
+    min_fitness = None
+    min_user = 0
+    for item in hottest_tweet_by_user:
+        fitness = hottest_tweet_by_user[item][0]
+        if min_fitness is None:
+            min_fitness = fitness
+            min_user = item
+        elif fitness < min_fitness:
+            min_fitness = fitness
+            min_user = item
+    return [min_user, hottest_tweet_by_user[min_user]]
 
 def obtain_twitters(followers):
-    pass
+    tweets = dict()
+    for person in followers:
+        tweets[person] = [tweets_by_user[person][0], tweets_by_user[person][3]]
+    return tweets
 
 
 def obtain_followers(person):
@@ -176,8 +184,6 @@ def initial_following(twitter_users):
                     random_user = random.randint(1, (population_number_M-1))
                 followers_list.append(random_user)
         followers[user] = followers_list
-
-    #print(followers)
 
 
 def random_twitt():
@@ -218,6 +224,14 @@ def random_re_twitt():
 
 
 def find_hottest_twitt():
+    """
+    This function iterate over every twitter in tweets_by_user,
+    in look for those with better fitness .
+    :return:
+    dictionary whit this estructure
+    [user], fitness, feasible, number of retweets.
+
+    """
     max_rt = 0
     global hottest_tweet_by_user
     for user in tweets_by_user:
@@ -225,13 +239,15 @@ def find_hottest_twitt():
         factible = tweets_by_user[user][2]
         if number_of_retweets >= max_rt and factible:
             max_rt = number_of_retweets
-    #This line, will delete previous hottest tweets.
+    # This line, will delete previous hottest tweets.
     hottest_tweet_by_user = dict()
     for user in tweets_by_user:
         number_of_retweets = tweets_by_user[user][3]
         if number_of_retweets == max_rt:
-            hottest_tweet_by_user[user] = [number_of_retweets]
-
+            fitness_of_tweet = tweets_by_user[user][1]
+            is_feasible = tweets_by_user[user][2]
+            hottest_tweet_by_user[user] = [fitness_of_tweet, is_feasible, number_of_retweets]
+    print(hottest_tweet_by_user)
 
 def empty_tweet():
     return [None] * pf.columnas
