@@ -13,7 +13,7 @@ bernoulli_p = 0.5
 users_of_twitter = [None] # List of M twitter users.
 #hottest_tweet = [None]
 followers = dict()  # Each user has F followers.
-tweets_by_user = dict()  # Each user has a tweet and every tweet has: user [key], fitness, factibility and Number of RT.
+tweets_by_user = dict()  # Each user has a tweet and every tweet has: user [key], tweeter, fitness, factibility and Number of RT.
 hottest_tweet_by_user = dict()  # Tweets with more RT. Could exist more than one, given equal number of RT.
 seed = None
 
@@ -132,22 +132,19 @@ def obtain_worst(tweets):
 
 
 def obtain_best(tweets):
-    min_fitness = None
-    min_user = 0
-    for item in hottest_tweet_by_user:
-        fitness = hottest_tweet_by_user[item][0]
-        if min_fitness is None:
-            min_fitness = fitness
-            min_user = item
-        elif fitness < min_fitness:
-            min_fitness = fitness
-            min_user = item
-    return [min_user, hottest_tweet_by_user[min_user]]
+    """
+    :param tweets:
+    :return:
+    """
+    for tweet in tweets:
+        print(tweets[tweet][1])
+    print(tweets)
+
 
 def obtain_twitters(followers):
     tweets = dict()
     for person in followers:
-        tweets[person] = [tweets_by_user[person][0], tweets_by_user[person][3]]
+        tweets[person] = [tweets_by_user[person][0], tweets_by_user[person][1], tweets_by_user[person][3]]
     return tweets
 
 
@@ -170,7 +167,6 @@ def initial_following(twitter_users):
     This function implement a random follower for a twitter user.
     in stochastic process F user are selected and added to followers of twitter_user
     :param twitter_users:
-    :return: None
     """
     global followers
     for user in twitter_users:
@@ -248,6 +244,7 @@ def find_hottest_twitt():
             is_feasible = tweets_by_user[user][2]
             hottest_tweet_by_user[user] = [fitness_of_tweet, is_feasible, number_of_retweets]
     print(hottest_tweet_by_user)
+
 
 def empty_tweet():
     return [None] * pf.columnas
