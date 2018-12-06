@@ -23,8 +23,8 @@ def run_mh(inputFile):
     initialize_mh(inputFile)
     for rund in range(number_of_evaluation_N):
         for person in users_of_twitter:
-            followers = obtain_followers(person)
-            tweets = obtain_twitters(followers) # Get tweets and retweets
+            user_followers = obtain_followers(person)
+            tweets = obtain_twitters(user_followers)  # Get tweets and retweets
             # re_tweets = obtain_re_tweets(followers)
             best_tweet = obtain_best(tweets)
             worst_tweet = obtain_worst(tweets)
@@ -128,17 +128,41 @@ def perform_re_tweet(best_tweet):
 
 
 def obtain_worst(tweets):
-    pass
+    """
+
+    :param tweets:
+    :return dictionary whit worst tweet, user[key], tweet, fitness and #RT:
+    """
+    max_fitness = None
+    fitness_list = []
+    for tweet in tweets:
+        current_fitness = tweets[tweet][1]
+        fitness_list.append(current_fitness)
+    max_fitness = max(fitness_list)
+    worst_tweet = dict()
+    for tweet in tweets:
+        if tweets[tweet][1] == max_fitness:
+            worst_tweet[tweet] = tweets[tweet][0], tweets[tweet][1], tweets[tweet][2]
+    return worst_tweet
 
 
 def obtain_best(tweets):
     """
+    obtain the best tweet by fitness from followers.
     :param tweets:
-    :return:
+    :return dictionary whit best tweet, user[key], tweet, fitness and #RT:
     """
+    min_fitness = None
+    fitness_list = []
     for tweet in tweets:
-        print(tweets[tweet][1])
-    print(tweets)
+        current_fitness = tweets[tweet][1]
+        fitness_list.append(current_fitness)
+    min_fitness = min(fitness_list)
+    best_tweet = dict()
+    for tweet in tweets:
+        if tweets[tweet][1] == min_fitness:
+            best_tweet[tweet] = tweets[tweet][0], tweets[tweet][1], tweets[tweet][2]
+    return best_tweet
 
 
 def obtain_twitters(followers):
